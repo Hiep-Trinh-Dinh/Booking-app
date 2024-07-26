@@ -1,5 +1,5 @@
-import express from "express";
 const cors = require('cors');
+const express = require('express');
 const mongoose = require('mongoose');
 const User = require('./models/User.js');
 const Place = require('./models/Place.js');
