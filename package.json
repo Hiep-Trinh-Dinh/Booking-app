@@ -1,0 +1,17 @@
+{
+    "name": "booking",
+    "version": "1.0.0",
+    "description": "Your project description",
+    "main": "index.js",
+    "scripts": {
+      "start": "cd api && node index.js",
+      "build": "cd client && yarn install && yarn build",
+      "dev": "concurrently \"cd api && yarn dev\" \"cd client && yarn dev\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "concurrently": "^8.0.1"
+    }
+  }
