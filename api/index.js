@@ -1,4 +1,5 @@
 const cors = require('cors');
+const cloudinary = require('cloudinary').v2;
 const express = require('express');
 const mongoose = require('mongoose');
 const User = require('./models/User.js');
@@ -11,16 +12,23 @@ const imageDownloader = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+
 require('dotenv').config()
+
+cloudinary.config({
+    cloud_name: 'digj9t8om', 
+    api_key: '852875261613694', 
+    api_secret: 'TaDwpWj1Mx-VXCGye9OqIql1IYA' 
+});
 
 const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET || 'fasefraw4r5r3wq45wdfqw34twdfq';
 const PORT = process.env.PORT || 4000;
 
+
 app.use(express.json());
 app.use(cookieParser());
-app.use('/uploads', express.static(__dirname+'/uploads'));
 app.use(cors({
     credentials: true,
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -114,16 +122,16 @@ app.post('/upload-by-link', async (req, res) => {
 });
 
 const photosMiddleware = multer({dest:'uploads'});
-app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
+app.post('/upload', photosMiddleware.array('photos', 100), async (req, res) => {
     const uploadedFiles = [];
-    for(let i = 0; i < req.files.length; i++){
-        const {path, originalname} = req.files[i];
-        const parts = originalname.split('.');
-        const ext = parts[parts.length - 1];
-        const newPath = path + '.' + ext;
-        fs.renameSync(path, newPath);
-        const cleanedPath = newPath.replace('uploads', ''); // Bỏ phần 'uploads/' ở đầu
-        uploadedFiles.push(cleanedPath);
+    for(let file of req.files){
+        try {
+            const result = await cloudinary.uploader.upload(file.path);
+            uploadedFiles.push(result.secure_url);
+            fs.unlinkSync(file.path); // Xóa file tạm sau khi upload
+        } catch (error) {
+            console.error('Lỗi khi upload ảnh lên Cloudinary:', error);
+        }
     }
     res.json(uploadedFiles);
 });
