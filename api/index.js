@@ -38,7 +38,6 @@ app.use(cors({
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 
-
 function getUserDataFromToken(req){
     return new Promise((resolve, reject) =>{
         jwt.verify(req.cookies.token, jwtSecret, {}, async (err, userData) => {
@@ -209,6 +208,7 @@ app.post('/bookings', async (req, res) => {
 });
 
 
+
 app.get('/bookings', async (req,res) => {
     mongoose.connect(process.env.MONGO_URL);
     const userData = await getUserDataFromToken(req)
@@ -218,6 +218,10 @@ app.get('/bookings', async (req,res) => {
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
 //c6GqcFTtFFM2Et10
