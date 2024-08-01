@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:5173',
+    origin: 'https://booking-app-p1kz.onrender.com',
 }));
 
 // Serve static files from the React app
