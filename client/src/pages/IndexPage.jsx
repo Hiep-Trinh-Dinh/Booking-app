@@ -14,6 +14,9 @@ export default function IndexPage() {
         axios.get('/places').then(response => {
             setPlaces(response.data);
             setFilteredPlaces(response.data);
+        }).catch(error => {
+            console.error('Error fetching places:', error);
+            // Có thể thêm state để hiển thị lỗi cho người dùng
         });
     }, []);
 
